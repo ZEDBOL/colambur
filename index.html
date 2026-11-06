@@ -206,17 +206,17 @@
       line-height: 1;
     }
 
-    .social-links a[href*="twitch.tv"] {
-      color: #9146ff;
+    .social-links a.social-twitch {
+      color: #9146ff !important;
     }
-    .social-links a[href*="twitch.tv"] span {
-      color: #9146ff;
+    .social-links a.social-twitch span {
+      color: #9146ff !important;
     }
-    .social-links a[href*="t.me"] {
-      color: #0088cc;
+    .social-links a.social-telegram {
+      color: #0088cc !important;
     }
-    .social-links a[href*="t.me"] span {
-      color: #0088cc;
+    .social-links a.social-telegram span {
+      color: #0088cc !important;
     }
 
     .social-links a:hover {
@@ -453,10 +453,11 @@
     .totals dd {
       margin: 0;
       font-family: var(--compact);
-      font-size: clamp(1.5rem, 2.25vw, 2.1rem);
-      font-weight: 500;
+      font-size: clamp(1.8rem, 2.6vw, 2.5rem);
+      font-weight: 600;
       line-height: 1;
       font-variant-numeric: tabular-nums;
+      color: var(--accent);
     }
 
     .totals dd.is-positive {
@@ -715,10 +716,11 @@
 
     .stat-value {
       font-family: var(--compact);
-      font-size: clamp(1.25rem, 1.8vw, 1.55rem);
-      font-weight: 500;
+      font-size: clamp(1.4rem, 2vw, 1.75rem);
+      font-weight: 600;
       line-height: 1;
       font-variant-numeric: tabular-nums;
+      color: var(--accent);
     }
 
     .stat-bar {
@@ -1049,8 +1051,8 @@
     </a>
     <div class="masthead-side">
       <nav class="social-links" aria-label="Ссылки">
-        <a href="https://www.twitch.tv/tam_nyam" target="_blank" rel="noopener noreferrer">Twitch <span aria-hidden="true">↗</span></a>
-        <a href="https://t.me/tam_nyam" target="_blank" rel="noopener noreferrer">Telegram <span aria-hidden="true">↗</span></a>
+        <a href="https://www.twitch.tv/tam_nyam" target="_blank" rel="noopener noreferrer" class="social-twitch">Twitch <span aria-hidden="true">↗</span></a>
+        <a href="tg://resolve?domain=tam_nyam" data-fallback="https://t.me/tam_nyam" rel="noopener noreferrer" class="social-telegram">Telegram <span aria-hidden="true">↗</span></a>
       </nav>
       <p class="masthead-count"><b id="collection-count">04</b> предмета</p>
       <button class="theme-toggle" aria-label="Сменить тему" title="Тёмная тема">🌙</button>
@@ -1404,6 +1406,18 @@
       themeToggle.addEventListener("click", () => {
         const isDark = document.documentElement.getAttribute("data-theme") === "dark";
         applyTheme(!isDark);
+      });
+
+      document.querySelectorAll('.social-links a[data-fallback]').forEach(link => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const deep = link.getAttribute("href");
+          const fallback = link.getAttribute("data-fallback");
+          window.location.href = deep;
+          setTimeout(() => {
+            window.open(fallback, "_blank", "noopener,noreferrer");
+          }, 2000);
+        });
       });
 
       const specimen = document.querySelector(".specimen");
