@@ -673,7 +673,7 @@
     .move h3 {
       margin: 0;
       font-family: var(--serif);
-      font-size: clamp(1.4rem, 2.1vw, 1.8rem);
+      font-size: clamp(1.6rem, 2.4vw, 2.1rem);
       font-weight: 400;
       line-height: 1.08;
       letter-spacing: -.035em;
@@ -682,7 +682,7 @@
     .move-kind {
       margin: 5px 0 0;
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 10px;
       letter-spacing: .12em;
       text-transform: uppercase;
       color: var(--faint);
@@ -707,7 +707,8 @@
     }
 
     .stat-label {
-      font-size: 9px;
+      font-size: 11px;
+      font-weight: 600;
       letter-spacing: .14em;
       text-transform: uppercase;
       white-space: nowrap;
@@ -802,6 +803,22 @@
     .footer a:hover {
       color: var(--ink);
       border-color: var(--ink);
+    }
+
+    .batam-fall {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      animation: batamFall 1.8s ease-out forwards;
+    }
+
+    @keyframes batamFall {
+      from {
+        transform: translateY(-80px) rotate(var(--batam-rot));
+      }
+      to {
+        transform: translateY(130vh) rotate(var(--batam-end-rot));
+      }
     }
 
     .sr-only {
@@ -1403,9 +1420,40 @@
 
       systemDark.addEventListener("change", applySystemTheme);
 
+      const clickTimes = [];
+
+      function spawnBatam() {
+        const batam = document.createElement("img");
+        batam.src = "batam.png";
+        batam.className = "batam-fall";
+        const rot = Math.random() * 40 - 20;
+        const endRot = rot + (Math.random() * 30 - 15);
+        batam.style.setProperty("--batam-rot", rot + "deg");
+        batam.style.setProperty("--batam-end-rot", endRot + "deg");
+        batam.style.left = Math.random() * 100 + "vw";
+        batam.style.top = "-80px";
+        batam.style.width = (30 + Math.random() * 40) + "px";
+        batam.style.pointerEvents = "none";
+        document.body.appendChild(batam);
+        batam.addEventListener("animationend", () => batam.remove());
+      }
+
       themeToggle.addEventListener("click", () => {
+        const now = Date.now();
+        clickTimes.push(now);
+        while (clickTimes.length && clickTimes[0] < now - 1500) {
+          clickTimes.shift();
+        }
+
         const isDark = document.documentElement.getAttribute("data-theme") === "dark";
         applyTheme(!isDark);
+
+        if (clickTimes.length >= 3) {
+          clickTimes.length = 0;
+          for (let i = 0; i < 8; i++) {
+            setTimeout(() => spawnBatam(), i * 120);
+          }
+        }
       });
 
       document.querySelectorAll('.social-links a[data-fallback]').forEach(link => {
