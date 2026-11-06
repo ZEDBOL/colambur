@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#f1ece2">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f1ece2'/%3E%3Crect x='6.5' y='6.5' width='19' height='19' fill='none' stroke='%231b1c17'/%3E%3Cpath d='M10 10h12L10 22z' fill='%23b94a27'/%3E%3C/svg%3E">
   <title>Арсенал — кодекс оружия</title>
@@ -37,6 +37,18 @@
       --shell: 1320px;
       --gutter: clamp(18px, 3.2vw, 44px);
       --ease: cubic-bezier(.22, .7, .22, 1);
+    }
+
+    [data-theme="dark"] {
+      --paper: #141410;
+      --paper-soft: #1e1e18;
+      --ink: #e8e6e0;
+      --muted: #9a988e;
+      --faint: #7a786e;
+      --rule: #33322c;
+      --rule-strong: #55544c;
+      --stage: #0a0a08;
+      --stage-deep: #050504;
     }
 
     html {
@@ -176,9 +188,9 @@
     .social-links a {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 10px;
       letter-spacing: .06em;
       text-transform: uppercase;
       color: var(--muted);
@@ -190,13 +202,40 @@
     .social-links a span {
       color: var(--accent);
       font-family: var(--sans);
-      font-size: 10px;
+      font-size: 11px;
       line-height: 1;
+    }
+
+    .social-links a[href*="twitch.tv"] {
+      color: #9146ff;
+    }
+    .social-links a[href*="twitch.tv"] span {
+      color: #9146ff;
+    }
+    .social-links a[href*="t.me"] {
+      color: #0088cc;
+    }
+    .social-links a[href*="t.me"] span {
+      color: #0088cc;
     }
 
     .social-links a:hover {
       color: var(--ink);
       border-color: var(--ink);
+    }
+
+    .theme-toggle {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 4px 6px;
+      line-height: 1;
+    }
+
+    .theme-toggle:hover {
+      color: var(--ink);
     }
 
     .page {
@@ -1008,13 +1047,13 @@
       <span class="brand-mark" aria-hidden="true"></span>
       <span class="brand-name">Оружие</span>
     </a>
-    <p class="masthead-note">Полевой справочник оружия</p>
     <div class="masthead-side">
-      <p class="masthead-count"><b id="collection-count">04</b> предмета</p>
       <nav class="social-links" aria-label="Ссылки">
         <a href="https://www.twitch.tv/tam_nyam" target="_blank" rel="noopener noreferrer">Twitch <span aria-hidden="true">↗</span></a>
         <a href="https://t.me/tam_nyam" target="_blank" rel="noopener noreferrer">Telegram <span aria-hidden="true">↗</span></a>
       </nav>
+      <p class="masthead-count"><b id="collection-count">04</b> предмета</p>
+      <button class="theme-toggle" aria-label="Сменить тему" title="Тёмная тема">🌙</button>
     </div>
   </header>
 
@@ -1329,6 +1368,62 @@
 
       const fromHash = weapons.findIndex((weapon) => location.hash === `#${weapon.id}`);
       if (fromHash !== -1) current = fromHash;
+
+      const themeToggle = document.querySelector(".theme-toggle");
+
+      function applyTheme(dark) {
+        if (dark) {
+          document.documentElement.setAttribute("data-theme", "dark");
+          localStorage.setItem("theme", "dark");
+        } else {
+          document.documentElement.removeAttribute("data-theme");
+          localStorage.setItem("theme", "light");
+        }
+        updateThemeIcon();
+      }
+
+      function updateThemeIcon() {
+        const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+        themeToggle.textContent = isDark ? "☀️" : "🌙";
+        themeToggle.title = isDark ? "Светлая тема" : "Тёмная тема";
+      }
+
+      const saved = localStorage.getItem("theme");
+      const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+      function applySystemTheme() {
+        if (!saved) {
+          applyTheme(systemDark.matches);
+        }
+      }
+
+      applySystemTheme();
+
+      systemDark.addEventListener("change", applySystemTheme);
+
+      themeToggle.addEventListener("click", () => {
+        const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+        applyTheme(!isDark);
+      });
+
+      const specimen = document.querySelector(".specimen");
+
+      specimen.addEventListener("mousemove", (event) => {
+        sprite.style.transition = "transform 0.25s cubic-bezier(.22, .7, .22, 1)";
+        const rect = specimen.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const moveX = ((x - centerX) / centerX) * 10;
+        const moveY = ((y - centerY) / centerY) * 10;
+        sprite.style.transform = `rotate(var(--angle, 0deg)) translate(${moveX}px, ${moveY}px)`;
+      });
+
+      specimen.addEventListener("mouseleave", () => {
+        sprite.style.transition = "transform 0.7s cubic-bezier(.22, .7, .22, 1)";
+        sprite.style.transform = `rotate(var(--angle, 0deg))`;
+      });
 
       buildTabs();
       renderWeapon(false);
