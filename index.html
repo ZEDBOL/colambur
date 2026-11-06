@@ -1,3 +1,1338 @@
-<h1> Добро пожаловать в вики </h1>
-<p> здесь собрана информация </p>
-<img src="content/image.png" alt="Коса Жатвы" style="max-width: 300px;">
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f1ece2">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f1ece2'/%3E%3Crect x='6.5' y='6.5' width='19' height='19' fill='none' stroke='%231b1c17'/%3E%3Cpath d='M10 10h12L10 22z' fill='%23b94a27'/%3E%3C/svg%3E">
+  <title>Арсенал — кодекс оружия</title>
+  <meta name="description" content="Справочник оружия ближнего боя: способности, урон, разброс и энергия.">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --paper: #f1ece2;
+      --paper-soft: #e9e2d5;
+      --ink: #1b1c17;
+      --muted: #6a685e;
+      --faint: #6b675d;
+      --rule: #d3ccbd;
+      --rule-strong: #b9b1a0;
+      --stage: #1f221c;
+      --stage-deep: #151711;
+      --accent: #b94a27;
+      --accent-rgb: 185, 74, 39;
+      --spread: #8b7b59;
+      --good: #2f6a4d;
+      --bad: #a93d2b;
+      --serif: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, "Times New Roman", serif;
+      --sans: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+      --compact: "Bahnschrift", "Arial Narrow", "Segoe UI", sans-serif;
+      --mono: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+      --shell: 1320px;
+      --gutter: clamp(18px, 3.2vw, 44px);
+      --ease: cubic-bezier(.22, .7, .22, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      pointer-events: none;
+      opacity: .06;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+      mix-blend-mode: multiply;
+    }
+
+    ::selection {
+      color: var(--paper);
+      background: var(--accent);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    .masthead {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 24px;
+      width: 100%;
+      max-width: var(--shell);
+      margin: 0 auto;
+      padding: 24px var(--gutter);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      justify-self: start;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      position: relative;
+      flex: 0 0 auto;
+      width: 25px;
+      height: 25px;
+      border: 1px solid currentColor;
+    }
+
+    .brand-mark::before {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      background: var(--accent);
+      clip-path: polygon(0 0, 100% 0, 0 100%);
+      transition: background .3s var(--ease);
+    }
+
+    .brand-name {
+      font-family: var(--serif);
+      font-size: 26px;
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+
+    .masthead-note {
+      margin: 0;
+      font-family: var(--compact);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-align: center;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .masthead-count {
+      justify-self: end;
+      margin: 0;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .06em;
+      white-space: nowrap;
+      color: var(--muted);
+    }
+
+    .masthead-count b {
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    .masthead-side {
+      display: flex;
+      align-items: center;
+      justify-self: end;
+      gap: 16px;
+    }
+
+    .social-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-left: 16px;
+      border-left: 1px solid var(--rule);
+    }
+
+    .social-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color .2s var(--ease), border-color .2s var(--ease);
+    }
+
+    .social-links a span {
+      color: var(--accent);
+      font-family: var(--sans);
+      font-size: 10px;
+      line-height: 1;
+    }
+
+    .social-links a:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: var(--shell);
+      margin: 0 auto;
+      padding: 0 var(--gutter) 28px;
+    }
+
+    .weapon-nav {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 22px;
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .weapon-tab {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      min-height: 58px;
+      padding: 0 16px;
+      border: 0;
+      border-left: 1px solid var(--rule);
+      color: var(--ink);
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      transition: background .2s var(--ease), color .2s var(--ease);
+    }
+
+    .weapon-tab:first-child {
+      border-left: 0;
+    }
+
+    .weapon-tab:hover {
+      background: var(--paper-soft);
+    }
+
+    .weapon-tab[aria-pressed="true"] {
+      color: var(--paper);
+      background: var(--ink);
+    }
+
+    .weapon-tab:focus-visible {
+      outline-offset: -4px;
+    }
+
+    .tab-index {
+      flex: 0 0 auto;
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--faint);
+      transition: color .2s var(--ease);
+    }
+
+    .weapon-tab[aria-pressed="true"] .tab-index {
+      color: var(--paper);
+      color: color-mix(in srgb, var(--accent) 45%, var(--paper));
+    }
+
+    .tab-name {
+      overflow: hidden;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .tab-dot {
+      flex: 0 0 auto;
+      width: 5px;
+      height: 5px;
+      margin-left: auto;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity .2s var(--ease);
+    }
+
+    .weapon-tab[aria-pressed="true"] .tab-dot {
+      opacity: 1;
+    }
+
+    .record {
+      display: grid;
+      grid-template-columns: minmax(0, 1.03fr) minmax(380px, .97fr);
+      gap: clamp(24px, 4.5vw, 60px);
+      padding: clamp(36px, 5.2vw, 68px) 0 clamp(40px, 5vw, 66px);
+    }
+
+    .record-copy {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 486px;
+    }
+
+    .record-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0;
+      font-family: var(--compact);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 18px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .record-index {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .08em;
+      white-space: nowrap;
+      color: var(--faint);
+    }
+
+    .record-title {
+      margin: auto 0;
+      padding: 38px 0;
+    }
+
+    .record-title h1 {
+      max-width: 9ch;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(3.45rem, 6.6vw, 6rem);
+      font-weight: 400;
+      line-height: .91;
+      letter-spacing: -.045em;
+      text-wrap: balance;
+    }
+
+    .record-note {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 0 0;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .record-note::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      background: var(--accent);
+    }
+
+    .record-totals {
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr);
+      align-items: end;
+      gap: 18px;
+      padding-top: 13px;
+      border-top: 1px solid var(--ink);
+    }
+
+    .totals-label {
+      padding-bottom: 3px;
+      font-family: var(--compact);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--faint);
+    }
+
+    .totals {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin: 0;
+    }
+
+    .totals > div {
+      min-width: 0;
+      padding-left: 16px;
+      border-left: 1px solid var(--rule);
+    }
+
+    .totals > div:first-child {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .totals dt {
+      margin: 0 0 5px;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .totals dd {
+      margin: 0;
+      font-family: var(--compact);
+      font-size: clamp(1.5rem, 2.25vw, 2.1rem);
+      font-weight: 500;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .totals dd.is-positive {
+      color: var(--good);
+    }
+
+    .totals dd.is-negative {
+      color: var(--bad);
+    }
+
+    .totals dd.is-zero {
+      color: var(--muted);
+    }
+
+    .specimen {
+      position: relative;
+      min-height: 486px;
+      margin: 0;
+      overflow: hidden;
+      isolation: isolate;
+      color: var(--paper);
+      background:
+        radial-gradient(circle at 50% 48%, rgba(var(--accent-rgb), .2), transparent 50%),
+        linear-gradient(155deg, #25281f 0%, #1a1d16 55%, #131510 100%);
+      box-shadow: 0 26px 64px -46px rgba(18, 19, 14, .85);
+    }
+
+    .specimen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(241, 236, 226, .055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(241, 236, 226, .055) 1px, transparent 1px);
+      background-size: 44px 44px;
+      -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 76%);
+      mask-image: radial-gradient(circle at 50% 50%, #000 0%, transparent 76%);
+    }
+
+    .specimen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      border: 1px solid rgba(241, 236, 226, .09);
+    }
+
+    .specimen-head {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 16px 18px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(241, 236, 226, .52);
+    }
+
+    .specimen-head span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .specimen-head i {
+      width: 5px;
+      height: 5px;
+      background: var(--accent);
+    }
+
+    .specimen-art {
+      position: absolute;
+      inset: 44px 22px 22px;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+    }
+
+    .specimen-ring {
+      position: absolute;
+      width: min(66%, 340px);
+      aspect-ratio: 1;
+      border: 1px solid rgba(241, 236, 226, .12);
+      border-radius: 50%;
+    }
+
+    .specimen-ring::before,
+    .specimen-ring::after {
+      content: "";
+      position: absolute;
+      background: rgba(241, 236, 226, .09);
+    }
+
+    .specimen-ring::before {
+      top: 50%;
+      left: -16%;
+      width: 132%;
+      height: 1px;
+    }
+
+    .specimen-ring::after {
+      top: -16%;
+      left: 50%;
+      width: 1px;
+      height: 132%;
+    }
+
+    .specimen-floor {
+      position: absolute;
+      bottom: 8%;
+      left: 50%;
+      width: 38%;
+      height: 16px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(0, 0, 0, .55), transparent 70%);
+      filter: blur(5px);
+      transform: translateX(-50%);
+    }
+
+    .specimen-figure {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      width: 100%;
+      height: 100%;
+      place-items: center;
+    }
+
+    .weapon-sprite {
+      display: block;
+      width: clamp(230px, 74%, 390px);
+      height: auto;
+      max-height: 300px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      transform-origin: var(--ox, 50%) var(--oy, 50%);
+      transform: rotate(var(--angle, 0deg));
+      filter: drop-shadow(0 18px 22px rgba(0, 0, 0, .5));
+    }
+
+    .moves {
+      padding: clamp(26px, 4vw, 48px) 0 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      padding-top: 18px;
+      border-top: 1px solid var(--ink);
+    }
+
+    .section-head h2 {
+      margin: 10px 0 0;
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 3.6vw, 3rem);
+      font-weight: 400;
+      line-height: .98;
+      letter-spacing: -.045em;
+    }
+
+    .section-aside {
+      margin: 0;
+      padding-bottom: 5px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: var(--faint);
+    }
+
+    .move-list {
+      margin-top: 18px;
+      border-top: 1px solid var(--rule-strong);
+    }
+
+    .move {
+      display: grid;
+      grid-template-columns: minmax(220px, .85fr) minmax(0, 1.55fr);
+      align-items: center;
+      gap: clamp(18px, 4vw, 60px);
+      padding: clamp(20px, 2.7vw, 30px) 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .move-name {
+      display: flex;
+      align-items: flex-start;
+      min-width: 0;
+      gap: 16px;
+    }
+
+    .move-index {
+      flex: 0 0 auto;
+      padding-top: 6px;
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--muted);
+      color: color-mix(in srgb, var(--accent) 80%, var(--ink));
+    }
+
+    .move h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(1.4rem, 2.1vw, 1.8rem);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -.035em;
+    }
+
+    .move-kind {
+      margin: 5px 0 0;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--faint);
+    }
+
+    .move-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(18px, 3.2vw, 44px);
+    }
+
+    .stat {
+      min-width: 0;
+    }
+
+    .stat-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 9px;
+    }
+
+    .stat-label {
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-family: var(--compact);
+      font-size: clamp(1.25rem, 1.8vw, 1.55rem);
+      font-weight: 500;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-bar {
+      display: block;
+      height: 2px;
+      overflow: hidden;
+      background: var(--rule);
+    }
+
+    .stat-bar i {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: var(--spread);
+      transform: scaleX(var(--fill, 0));
+      transform-origin: left center;
+      animation: bar-in .55s var(--ease) both;
+    }
+
+    .stat--damage .stat-bar i {
+      background: var(--accent);
+    }
+
+    .stat--energy.is-positive .stat-value {
+      color: var(--good);
+    }
+
+    .stat--energy.is-negative .stat-value {
+      color: var(--bad);
+    }
+
+    .stat--energy.is-zero .stat-value {
+      color: var(--muted);
+    }
+
+    .stat--energy .stat-bar i {
+      background: var(--good);
+    }
+
+    .stat--energy.is-negative .stat-bar i {
+      background: var(--bad);
+    }
+
+    .stat--energy.is-zero .stat-bar i {
+      background: var(--faint);
+    }
+
+    @keyframes bar-in {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(var(--fill, 0)); }
+    }
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding-top: 18px;
+      border-top: 1px solid var(--ink);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--faint);
+    }
+
+    .footer p {
+      margin: 0;
+    }
+
+    .footer a {
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color .2s var(--ease), border-color .2s var(--ease);
+    }
+
+    .footer a:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .no-script {
+      margin: 40px 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 940px) {
+      .record {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding-top: 34px;
+      }
+
+      .record-copy {
+        min-height: 0;
+      }
+
+      .record-title {
+        margin: 0;
+        padding: 34px 0 32px;
+      }
+
+      .record-title h1 {
+        max-width: 12ch;
+        font-size: clamp(3.4rem, 11vw, 5.4rem);
+      }
+
+      .specimen {
+        min-height: clamp(320px, 55vw, 430px);
+      }
+
+      .move {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        padding: 24px 0;
+      }
+
+      .section-aside {
+        padding-bottom: 2px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .weapon-nav {
+        grid-template-columns: 1fr 1fr;
+        margin-top: 18px;
+        border-bottom: 0;
+      }
+
+      .weapon-tab {
+        gap: 10px;
+        min-height: 52px;
+        padding: 0 12px;
+        border-left: 1px solid var(--rule);
+        border-bottom: 1px solid var(--rule);
+      }
+
+      .weapon-tab:nth-child(odd) {
+        border-left: 0;
+      }
+
+      .weapon-tab:nth-child(n + 3) {
+        border-bottom-color: var(--ink);
+      }
+
+      .tab-name {
+        font-size: 14px;
+      }
+
+      .tab-dot {
+        display: none;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .masthead {
+        grid-template-columns: 1fr auto;
+        gap: 16px;
+        padding-top: 19px;
+        padding-bottom: 19px;
+      }
+
+      .masthead-note,
+      .masthead-count {
+        display: none;
+      }
+
+      .brand-name {
+        font-size: 23px;
+      }
+
+      .social-links {
+        gap: 12px;
+        padding-left: 0;
+        border-left: 0;
+      }
+
+      .weapon-tab {
+        gap: 8px;
+        padding: 0 10px;
+      }
+
+      .tab-index {
+        font-size: 8px;
+      }
+
+      .tab-name {
+        font-size: 13.5px;
+      }
+
+      .record {
+        padding-top: 28px;
+        padding-bottom: 38px;
+      }
+
+      .record-title {
+        padding: 28px 0 28px;
+      }
+
+      .record-title h1 {
+        font-size: clamp(2.9rem, 12vw, 4.2rem);
+      }
+
+      .record-totals {
+        grid-template-columns: 1fr;
+        gap: 9px;
+      }
+
+      .totals-label {
+        padding-bottom: 0;
+      }
+
+      .specimen {
+        min-height: 300px;
+      }
+
+      .specimen-head {
+        padding: 13px 14px;
+        font-size: 9px;
+      }
+
+      .specimen-art {
+        inset: 38px 16px 16px;
+      }
+
+      .weapon-sprite {
+        width: min(88%, 320px);
+        max-height: 220px;
+      }
+
+      .section-head {
+        flex-wrap: wrap;
+        gap: 8px 16px;
+      }
+
+      .section-aside {
+        padding-bottom: 2px;
+      }
+
+      .move-stats {
+        gap: 12px;
+      }
+
+      .stat-label {
+        font-size: 8px;
+        letter-spacing: .1em;
+      }
+
+      .stat-value {
+        font-size: 1.25rem;
+      }
+
+      .stat-top {
+        gap: 5px;
+      }
+
+      .footer {
+        gap: 8px 16px;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .social-links {
+        gap: 10px;
+      }
+
+      .totals > div {
+        padding-left: 11px;
+      }
+
+      .totals dd {
+        font-size: 1.45rem;
+      }
+
+      .move-name {
+        gap: 12px;
+      }
+
+      .stat-value {
+        font-size: 1.15rem;
+      }
+
+      .stat-label {
+        font-size: 7.5px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+
+      .stat-bar i {
+        transform: scaleX(var(--fill, 0));
+      }
+    }
+  </style>
+</head>
+<body id="top">
+  <header class="masthead">
+    <a class="brand" href="#top" aria-label="Арсенал — наверх">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-name">Оружие</span>
+    </a>
+    <p class="masthead-note">Полевой справочник оружия</p>
+    <div class="masthead-side">
+      <p class="masthead-count"><b id="collection-count">04</b> предмета</p>
+      <nav class="social-links" aria-label="Ссылки">
+        <a href="https://www.twitch.tv/tam_nyam" target="_blank" rel="noopener noreferrer">Twitch <span aria-hidden="true">↗</span></a>
+        <a href="https://t.me/tam_nyam" target="_blank" rel="noopener noreferrer">Telegram <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page">
+    <nav class="weapon-nav" id="weapon-nav" aria-label="Выбор оружия"></nav>
+
+    <main>
+      <section class="record" aria-labelledby="weapon-name">
+        <div class="record-copy">
+          <div class="record-head">
+            <p class="eyebrow">Ближний бой</p>
+            <span class="record-index" id="record-index">01 / 04</span>
+          </div>
+
+          <div class="record-title">
+            <h1 id="weapon-name">Большой топор</h1>
+            <p class="record-note" id="record-note">3 приёма</p>
+          </div>
+
+          <div class="record-totals">
+            <span class="totals-label">Всего</span>
+            <dl class="totals" id="totals" aria-label="Суммарные характеристики"></dl>
+          </div>
+        </div>
+
+        <figure class="specimen" id="specimen">
+          <div class="specimen-head">
+            <span><i aria-hidden="true"></i> Ближний бой</span>
+          </div>
+
+          <div class="specimen-art">
+            <span class="specimen-ring" aria-hidden="true"></span>
+            <span class="specimen-floor" aria-hidden="true"></span>
+            <div class="specimen-figure">
+              <img class="weapon-sprite" id="weapon-sprite" src="" alt="">
+            </div>
+          </div>
+        </figure>
+      </section>
+
+      <noscript>
+        <p class="no-script">Для показа карточек оружия включите JavaScript.</p>
+      </noscript>
+
+      <section class="moves" aria-labelledby="moves-title">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Характеристики</p>
+            <h2 id="moves-title">Способности</h2>
+          </div>
+          <p class="section-aside" id="moves-count">3 приёма</p>
+        </div>
+
+        <div class="move-list" id="move-list"></div>
+      </section>
+
+      <p class="sr-only" id="announcer" aria-live="polite"></p>
+    </main>
+
+    <footer class="footer">
+      <p>zedbol 2026</p>
+      
+      <p><a href="#top">Наверх ↑</a></p>
+    </footer>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const sprites = {
+        axe: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAWCAYAAABtwKSvAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAD/AP8A/6C9p5MAAAHHSURBVFjDzZe/awIxFMe/d6iTiIKKiHjYOxC5yaluxbGbe/+B/kn9Mzq1o3Szk5MUwRZsi0gtWMSpStNBEt7FRKNwP75wEJJc8j659/LeWUiQHM9nqv7pZGSZvG80KUqIXKUZGFvNx8ZAscNwEA7R7nQD48NB3xgoVhjH85kO4un+TrQT72a6+KAyhYgd5hjcqSAAYLlFWyzy+v0XKRzde5tv7Y2nfl5E28Q2GwD8RgbXlxdwizbjT1jGy3v4jQwK2TQA4OPXRevmQVwG3C5TWW7RZoVsGtXSDrxeruHx+S0MFgAQxr1/fWK22J3Zcr3BNt9CrtJEu9MVwc+/jKnHCDfjpwNAgAEQG9Ix3lctWaiXa3vGqdahmi0YlutNoE/lZmddAGG51THxE5eTJs8rpwA5ns9SdNEkiIKYih+GHbfxsuRyxhQkETByfml3ugGgQ8lVLoVChzExhotCyEDyXArCS6HQY4UawYNZB3GoyFSJXuXTychKhQ2jA6NazcfIVZoYDvp7/SoAnSK5xRzPZ1e9WyNjVdIB0K8SGcwhoHPE3ZGCRApDgahM4HT/OnJCjTxZynEjw6lEf9RUELHBHINTybSk+QeBTtSbXKEY6AAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyNi0wMS0xMFQxNDo1OToyOSswMDowMClgOa8AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjYtMDEtMTBUMTQ6NTk6MjkrMDA6MDBYPYETAAAAKHRFWHRkYXRlOnRpbWVzdGFtcAAyMDI2LTAxLTEwVDE0OjU5OjI5KzAwOjAwDyigzAAAAABJRU5ErkJggg==",
+        club: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAWCAYAAABtwKSvAAAAAXNSR0IArs4c6QAAASJJREFUWIXtlTFuwjAUQF+QmMoAUTuEgUh04wKcgRP3CnAA2EAKlfBA5TAkU6S2Q/mRYwwkSCkt8psc6yf+7/vHBo/H4/F42iOQwetz50vG64/P4Owbf5iAo8hk1CeOQgDeFhu4o9SthS1lBr0uAFH4BEAchb8iZSYuTEb9Sg5113e22aDXLaUAVtvDyYuuBezE7JhzicdRSKJ0Oad0DkCaFcym49pCzgB7UZGTNkyUdgrK7gppVlSeZ9NxJWmO1TdJlC53RNZdbQ+3y1yTwxBUOj8Rdc25kp8v3xm+BOz2P583x2lWtCPTRNBG2tVsHTve/E+lGDKvdE6aFe3KuKgjaMpJ1c0YuzVpcAC1evS65GwuiTQ9Re9+OT7CZe3x/Fe+Ac0Nngvyo4nbAAAAAElFTkSuQmCC",
+        eru: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAARCAYAAABJoiVMAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAD/AP8A/6C9p5MAAAF9SURBVEjH1ZUxSMNQFEVPSiFQCV3EDoKgW9TBQsAxQ6fSSXGpiBk6CV1dOgguXboWikMHRXRxlbpU0E0pdNFm6+AoDtZCwcXvoEnTtGqbhgTv9PPD++/k5iYPPMjQZeGlblopUkwoUmzy3oYui979pgga3AKeGNoCzuavAwV3AitSTES8HHJxXg6CdSAOs3PL3g8KIh5uZxcT2sB1dNrDu6In+QHp3vvNWbuh5dzxzftICOt+pZQhnoZODRLrV744+9erf3lu2euu6ElRC6hSynzt7l+Kp4+1ocJKad5ed2rjNfNDbmAAydBlkdteIlVQ2crm2dt4BWB1pQ/08NhCU04ByJ3kAajulmk0TVIF1X6IRtNES6rE01AvmhgHM77AOoHhOx4WOED1rM0opw933gDQkqoNOA3UOKCjgAGiYOW47cj03VDhQqT/t0gVVOrFn5v4JT8+ciC8ieiUp+HSaJph8U4uQ5fF7ZEa+Bh3y/MY/5duh5lpz+Bh9v8EOVm3UmYn6BkAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjYtMDEtMTBUMTQ6NTg6MzMrMDA6MDCueA1BAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDI2LTAxLTEwVDE0OjU4OjMzKzAwOjAw3yW1/QAAACh0RVh0ZGF0ZTp0aW1lc3RhbXAAMjAyNi0wMS0xMFQxNDo1ODozMyswMDowMIgwlCIAAAAASUVORK5CYII=",
+        scythe: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD0AAAAqCAYAAAAAsVPKAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAGYktHRAD/AP8A/6C9p5MAAAQ1SURBVGje3ZpPaBtHGMXf2LqUgvwHkoNcTMEBYQsblaWQYFJwDr6k9iE4JaEiJsQKcXJwAo1AJ+GTQARaX+QSpwQHheQgAqkhhD3UmLo4kIgIG6cYagh20KEFyTa0vdidHpxvMju7K80mtNLqgdi/s6uf3ptvZ3fF4FFT8SR32zYzl2Zej1cPBbwCHzvWAwD4On4GAPBqbQN9/WFcv3az3iza0nZGBX61tgEAuP39HQDAvQc/+MJlbehqwH6C1YaWgT87HhHr/QoMAC26wNSHm0EtOjvJkQb87XJVaNllGbgZVNNpNdZ+d9kVWna5GVXT6WaLtiN0tYrdiNEOtvZw+rw3tCw/uLx3sClM0IWvCt3XH643k2dwgteGrlXALl+ZwIXzl7RjVG9wN3hPd1l+UYCHEOowAABbOwtc/UG0RmSNLNlRGa5UKQAAuttHbHGv6vSLJzO2dZevTAAAb5QqvnewyWTwAA+JbaVKAaEOA93tIxbHXZ0Od23j73ReLNP8X9tP683pCC4DU7QJXJUjdLhrGwDwUXJMrNs43Yvi6joAIHb6E5i5FDdzqYYoasHWHi4DE+jd3rJtPxv0zFyahbu2sXjjlmXn4uo6Epk8S2TyjMABYDg2XdeIU6zlwkWRBoBnv78W4N3tI6Kd7UuTe8XVdUQHIli8cQvpP/5siP4rwwLW/itD03KpUsDd3jIu/tqJUIeBrZ0F7B1sMsd4k7MAMPTtN2ikGJOzav916rsABLC8vaaDMrCXODsNDNTrpZe2AFxBCUqdqtpnJewdbDIGAGbWsJxk+GqBmVmDI/glgHdRp6kKb+ZSnNaZuRQfG89ZoiefVEdObWU49XgBHsI+K4l2Py5mMDqUwHR6HKnkvJgSdMDMGry49hsq+X0cP/opNr54A1oXHTw8eHQgYjk5uT8cm2ZyEmg+Px/DuQs/2YpLqaLFbLnkkLZ2FrC1U7Jkk67RBDMV/4qfjY0KcKcfM9gKzgAgM9lmcToxu8syk208Onjd4rQ6r0pNhDN4QdtxWbpdYyqeFOCkl8/WkUrOi3QECFJtnJjdZeYguOq0HG+1wCUyeWbmIpymD++dwth4Dt3tI29BDRExz9SaevtqyQYu64MLmRx1t2MEW3s4RfG/BCZVc3uflT78hkOnohPo/wHsJPW5gLbT9R59eZXq9uhQAgDsTptZg2cm28SY2q/AqlSnLbeWw1cLhwVqEPxxJNIUwKrch6G/fCfusB5HItzMpXjyyMcNMRTVkRrt+3OPLNtt0GbW4InZXUYOE3zHmP+fLJX/+bl2atVBizpcbVRNxZN8eWmFLy+t8HK5zDtbTvLOlpPiu1clN7MGp37uF8nR7usPi2g/L66IFxW+AvICDBwOSFTgpoGmfzzVcrgpoFVY4J27bsC+hwYg3rh8Hj1hgQXc//Hke2gZnFTrmfy/imNoKS7lrfwAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjYtMDEtMDhUMTQ6MDA6MDArMDA6MDCHKqiFAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDI2LTAxLTA4VDE0OjAwOjAwKzAwOjAw9ncQOQAAACh0RVh0ZGF0ZTp0aW1lc3RhbXAAMjAyNi0wMS0wOFQxNDowMDowMCswMDowMKFiMeYAAAAASUVORK5CYII="
+      };
+
+      const weapons = [
+        {
+          id: "axe",
+          name: "Большой топор",
+          accent: "#b94a27",
+          image: sprites.axe,
+          angle: 14,
+          pivot: [0.2, 0.35],
+          abilities: [
+            { name: "замах", damage: 15, spread: 5, energy: -15 },
+            { name: "защитная стойка", damage: 10, spread: 5, energy: 5 },
+            { name: "атакующая стойка", damage: 5, spread: 10, energy: -5 }
+          ]
+        },
+        {
+          id: "club",
+          name: "Дубинка",
+          accent: "#8a6939",
+          image: sprites.club,
+          angle: 14,
+          pivot: [0.2, 0.35],
+          abilities: [
+            { name: "замах", damage: 10, spread: 15, energy: -20 },
+            { name: "защитная стойка", damage: 5, spread: 10, energy: -5 },
+            { name: "атакующая стойка", damage: 5, spread: 5, energy: 5 }
+          ]
+        },
+        {
+          id: "eru",
+          name: "Еру",
+          accent: "#936d20",
+          image: sprites.eru,
+          angle: 14,
+          pivot: [0.2, 0.35],
+          abilities: [
+            { name: "замах", damage: 5, spread: 5, energy: 5 },
+            { name: "разрез волны", damage: 20, spread: 5, energy: -35 },
+            { name: "атакующая стойка", damage: 10, spread: 5, energy: -10 }
+          ]
+        },
+        {
+          id: "scythe",
+          name: "Коса жатвы",
+          accent: "#675388",
+          image: sprites.scythe,
+          angle: 14,
+          pivot: [0.5, 0.35],
+          abilities: [
+            { name: "коса жатвы", damage: 10, spread: 5, energy: -15 },
+            { name: "поглощение", damage: 10, spread: 10, energy: 0 },
+            { name: "защитная стойка", damage: 5, spread: 10, energy: -5 }
+          ]
+        }
+      ];
+
+      const statInfo = {
+        damage: { label: "Урон", max: 20 },
+        spread: { label: "Разброс", max: 15 },
+        energy: { label: "Энергия", max: 35 }
+      };
+
+      const root = document.documentElement;
+      const nav = document.getElementById("weapon-nav");
+      const name = document.getElementById("weapon-name");
+      const recordIndex = document.getElementById("record-index");
+      const recordNote = document.getElementById("record-note");
+      const totals = document.getElementById("totals");
+      const recordTitle = document.querySelector(".record-title");
+      const recordTotals = document.querySelector(".record-totals");
+      const sprite = document.getElementById("weapon-sprite");
+      const figure = document.querySelector(".specimen-figure");
+      const moves = document.getElementById("move-list");
+      const movesCount = document.getElementById("moves-count");
+      const announcer = document.getElementById("announcer");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      let current = 0;
+
+      const pad = (number) => String(number).padStart(2, "0");
+      const sum = (weapon, key) =>
+        weapon.abilities.reduce((total, ability) => total + ability[key], 0);
+      const signed = (value) =>
+        value > 0 ? `+${value}` : value < 0 ? `−${Math.abs(value)}` : "0";
+      const tone = (value) =>
+        value < 0 ? "is-negative" : value > 0 ? "is-positive" : "is-zero";
+      const sentence = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+      const type = (abilityName) => abilityName.includes("стойка") ? "Стойка" : "Приём";
+      const rgb = (hex) => {
+        const number = parseInt(hex.slice(1), 16);
+        return `${number >> 16}, ${(number >> 8) & 255}, ${number & 255}`;
+      };
+
+      function buildTabs() {
+        nav.innerHTML = weapons.map((weapon, index) => `
+          <button class="weapon-tab" type="button" data-index="${index}" aria-pressed="false">
+            <span class="tab-name">${weapon.name}</span>
+            <span class="tab-dot" aria-hidden="true"></span>
+          </button>
+        `).join("");
+      }
+
+      function markTabs() {
+        nav.querySelectorAll(".weapon-tab").forEach((tab, index) => {
+          const active = index === current;
+          tab.setAttribute("aria-pressed", String(active));
+        });
+      }
+
+      function statMarkup(key, value) {
+        const info = statInfo[key];
+        const fill = Math.min(Math.abs(value) / info.max, 1) * 100;
+        const valueClass = key === "energy" ? ` ${tone(value)}` : "";
+        const valueText = key === "energy" ? signed(value) : String(value);
+
+        return `
+          <div class="stat stat--${key}${valueClass}">
+            <div class="stat-top">
+              <span class="stat-label">${info.label}</span>
+              <strong class="stat-value">${valueText}</strong>
+            </div>
+            <span class="stat-bar" aria-hidden="true">
+              <i style="--fill: ${fill.toFixed(2)}"></i>
+            </span>
+          </div>
+        `;
+      }
+
+      function renderAbilities(weapon) {
+        moves.innerHTML = weapon.abilities.map((ability, index) => `
+          <article class="move">
+            <div class="move-name">
+              <span class="move-index">${pad(index + 1)}</span>
+              <div>
+                <h3>${sentence(ability.name)}</h3>
+                <p class="move-kind">${type(ability.name)}</p>
+              </div>
+            </div>
+            <div class="move-stats">
+              ${statMarkup("damage", ability.damage)}
+              ${statMarkup("spread", ability.spread)}
+              ${statMarkup("energy", ability.energy)}
+            </div>
+          </article>
+        `).join("");
+      }
+
+      function flash(element, distance) {
+        if (reduceMotion.matches) return;
+
+        element.getAnimations().forEach((animation) => animation.cancel());
+        element.animate(
+          [
+            { opacity: .2, transform: `translateY(${distance}px)` },
+            { opacity: 1, transform: "translateY(0)" }
+          ],
+          { duration: 360, easing: "cubic-bezier(.22, .7, .22, 1)" }
+        );
+      }
+
+      function renderWeapon(animate = true) {
+        const weapon = weapons[current];
+        const damage = sum(weapon, "damage");
+        const spread = sum(weapon, "spread");
+        const energy = sum(weapon, "energy");
+        const count = weapon.abilities.length;
+
+        root.style.setProperty("--accent", weapon.accent);
+        root.style.setProperty("--accent-rgb", rgb(weapon.accent));
+
+        name.textContent = weapon.name;
+        recordIndex.textContent = `${pad(current + 1)} / ${pad(weapons.length)}`;
+        recordNote.textContent = `${count} приёма`;
+        movesCount.textContent = `${count} приёма`;
+
+        totals.innerHTML = `
+          <div><dt>Урон</dt><dd>${damage}</dd></div>
+          <div><dt>Разброс</dt><dd>${spread}</dd></div>
+          <div><dt>Энергия</dt><dd class="${tone(energy)}">${signed(energy)}</dd></div>
+        `;
+
+        sprite.src = weapon.image;
+        sprite.alt = `Пиксельный спрайт: ${weapon.name}`;
+        sprite.style.setProperty("--angle", `${weapon.angle}deg`);
+        sprite.style.setProperty("--ox", `${weapon.pivot[0] * 100}%`);
+        sprite.style.setProperty("--oy", `${weapon.pivot[1] * 100}%`);
+
+        renderAbilities(weapon);
+        markTabs();
+
+        document.title = `${weapon.name} — Оружие`;
+        announcer.textContent = `${weapon.name}. ${count} приёма. Урон ${damage}, разброс ${spread}, энергия ${signed(energy)}.`;
+
+        const hash = `#${weapon.id}`;
+        if (location.hash !== hash) {
+          history.replaceState(null, "", hash);
+        }
+
+        if (animate) {
+          flash(recordTitle, 8);
+          flash(recordTotals, 6);
+          flash(figure, 10);
+        }
+      }
+
+      function select(index) {
+        if (index === current || index < 0 || index >= weapons.length) return;
+        current = index;
+        renderWeapon();
+      }
+
+      nav.addEventListener("click", (event) => {
+        const tab = event.target.closest(".weapon-tab");
+        if (!tab) return;
+        select(Number(tab.dataset.index));
+      });
+
+      nav.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+
+        const tabs = [...nav.querySelectorAll(".weapon-tab")];
+        const index = tabs.indexOf(document.activeElement);
+        if (index < 0) return;
+
+        event.preventDefault();
+
+        let next = index;
+        if (event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+        if (event.key === "Home") next = 0;
+        if (event.key === "End") next = tabs.length - 1;
+
+        tabs[next].focus();
+        select(next);
+      });
+
+      const fromHash = weapons.findIndex((weapon) => location.hash === `#${weapon.id}`);
+      if (fromHash !== -1) current = fromHash;
+
+      buildTabs();
+      renderWeapon(false);
+    })();
+  </script>
+</body>
+</html>
